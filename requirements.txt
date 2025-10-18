@@ -1,0 +1,3 @@
+(whatever external libraries you may have used, please right them along with their versions here, exactly how you would write them while installing them on pip)
+eg: tensorflow==2.20.4
+Our project requires the following libraries:
