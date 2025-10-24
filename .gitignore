@@ -1,2 +1,3 @@
 #use this file to add directories containing any heavy files that you wouldn't want in the repository
 /dataset
+/asr_model_final_ep25.keras
