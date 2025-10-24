@@ -5,10 +5,10 @@ import os
 
 # --- Configuration ---
 # 1. Path to your saved custom .keras model file
-keras_model_path = "C:/User/Aneesh Shastri/Downloads/asr_model_final_ep25.keras" # Make sure this is the correct path
+keras_model_path = "asr_model_final_ep25.keras" # Make sure this is the correct path
 
 # 2. Path to the audio file you want to transcribe
-audio_file_path = "C:/Users/Aneesh Shastri/Downloads/19-198-0000.wav" 
+audio_file_path = "19-198-0000.wav" 
 
 # 3. Parameters used during training 
 SAMPLE_RATE = 16000
