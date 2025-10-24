@@ -5,11 +5,11 @@
 * **Model Type:** End-to-End Automatic Speech Recognition (ASR)
 * **Architecture:** Custom Convolutional Recurrent Neural Network (CRNN):
   * CNN Frontend: 4 `Conv2D` layers (32, 32, 64, 64 filters) with `BatchNormalization`, `ReLU`, `MaxPooling2D`, and `Dropout`.
-  * RNN Backend: 3 `Bidirectional LSTM` layers (256 units each) with `BatchNormalization` and `Dropout`.
+  * RNN Backend: 4 `Bidirectional LSTM` layers (512 units each) with `BatchNormalization` and `Dropout`.
   * Output: `Dense` layer with `softmax` activation.
 * **Framework:** TensorFlow / Keras
 * **Loss Function:** Connectionist Temporal Classification (CTC)
-* **Number of Parameters:** *\[Calculate and add this, e.g., using `model.count_params()`\]*
+* **Number of Parameters:** *7,961,854 (30.37 MB)*
 * **Language:** English (en)
 * **Repository:** <https://github.com/Aneeshshastri/SN_BOSE_MILAN_ASR>
 
@@ -17,11 +17,11 @@
 
 * **Primary Use:** Transcribing English speech audio files, particularly those exhibiting noise characteristics similar to the augmentations applied during training (e.g., background noise, reverb). Designed for robustness against common audio distortions.
 * **Secondary Use:** Educational tool for understanding ASR model development from scratch, specifically focusing on data augmentation techniques for noise robustness and quantization.
-* **Out-of-Scope Uses:** Real-time transcription, transcription of languages other than English, transcription of specialized domains (e.g., medical, legal) without fine-tuning, transcription of *perfectly clean* studio recordings (as it wasn't explicitly trained only on clean data).
+* **Out-of-Scope Uses:**  transcription of languages other than English, transcription of specialized domains (e.g., medical, legal) without fine-tuning, transcription of *perfectly clean* studio recordings (as it wasn't explicitly trained only on clean data). Note that the model is still not good enough to transcribe large recordings efficiently as it only uses a greedy decoder and was only trained on 100h of speech with 35 epochs. This model is certainly not nearly ready for production.
 
 ## Training Data
 
-* **Dataset:** Based on LibriSpeech `train-clean-100` split (\~100 hours). [Link](https://www.openslr.org/12)
+* **Dataset:** As given during the competition (\~100 hours). [Link](https://www.openslr.org/12)
 * **Speakers:** \~250 speakers reading English literature.
 * **Preprocessing:** Original audio converted from FLAC to WAV, resampled to 16kHz. Log-Mel spectrograms (80 bins) generated using `tf.signal`.
 * **Augmentation Strategy:** Trained **primarily on augmented data**. The custom `Augmenter` class was applied probabilistically to **all raw audio waveforms during training** to simulate noisy conditions:
@@ -33,17 +33,17 @@
 
 ## Training Procedure
 
-* **Framework:** TensorFlow 2.x
+* **Framework:** TensorFlow 2.18.x
 * **Data Pipeline:** `tf.data` used for loading, mapping (augmentation + preprocessing), filtering (by sequence length), shuffling (buffer size 1024), batching (size 32), and prefetching.
 * **Optimizer:** Adam (`tf.keras.optimizers.Adam`)
 * **Learning Rate Schedule:** Initial rate (e.g., 1e-3 or 1e-4) managed by `tf.keras.callbacks.ReduceLROnPlateau` monitoring `val_loss` (factor=0.5, patience=1 or 2, min_lr=1e-6). Manual adjustments (e.g., to 1e-5) were made during later stages.
-* **Epochs:** Trained for approximately 25 epochs.
-* **Hardware:** Kaggle Notebook (GPU - likely T4 or P100).
+* **Epochs:** Trained for approximately 35 epochs.
+* **Hardware:** Kaggle Notebook (GPU -P100).
 * **Callbacks:** `ModelCheckpoint` (saving best based on `val_loss`), `ReduceLROnPlateau`.
 
 ## Evaluation
 
-* **Evaluation Data:** LibriSpeech `dev-clean` (implicitly used as the validation set via the 90/10 split in the training script). *\[Specify if you used a different split for validation\]*
+* **Evaluation Data:** 10% of the dataset was reserved for vaildation(implicitly used as the validation set via the 90/10 split in the training script). 
 * **Metrics:**
   * CTC Loss (Validation): Reached a minimum value around **\~104**. This value reflects performance on *clean* validation data, while the model was trained on *noisy* data, indicating some generalization capability.
   * Word Error Rate (WER): **Not explicitly calculated** during training. Based on the validation loss and the augmented training strategy, WER on `dev-clean` might be slightly higher than if trained only on clean data (perhaps **18-30%** range estimate), but performance on noisy test sets (like `test-other` or custom noisy data) should be comparatively better. Requires explicit calculation.
