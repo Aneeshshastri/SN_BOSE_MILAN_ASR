@@ -17,7 +17,7 @@
 
 * **Primary Use:** Transcribing English speech audio files, particularly those exhibiting noise characteristics similar to the augmentations applied during training (e.g., background noise, reverb). Designed for robustness against common audio distortions.
 * **Secondary Use:** Educational tool for understanding ASR model development from scratch, specifically focusing on data augmentation techniques for noise robustness and quantization.
-* **Out-of-Scope Uses:**  transcription of languages other than English, transcription of specialized domains (e.g., medical, legal) without fine-tuning, transcription of *perfectly clean* studio recordings (as it wasn't explicitly trained only on clean data). Note that the model is still not good enough to transcribe large recordings efficiently as it only uses a greedy decoder and was only trained on 100h of speech with 35 epochs. This model is certainly not nearly ready for production.
+* **Out-of-Scope Uses:**  transcription of languages other than English, transcription of specialized domains (e.g., medical, legal) without fine-tuning, transcription of *perfectly clean* studio recordings (as it wasn't explicitly trained only on clean data). Note that the model is still not good enough to transcribe large recordings efficiently as it only uses a greedy decoder and was only trained on 100h of speech with 25 epochs. This model is certainly not nearly ready for production.
 
 ## Training Data
 
@@ -37,7 +37,7 @@
 * **Data Pipeline:** `tf.data` used for loading, mapping (augmentation + preprocessing), filtering (by sequence length), shuffling (buffer size 1024), batching (size 32), and prefetching.
 * **Optimizer:** Adam (`tf.keras.optimizers.Adam`)
 * **Learning Rate Schedule:** Initial rate (e.g., 1e-3 or 1e-4) managed by `tf.keras.callbacks.ReduceLROnPlateau` monitoring `val_loss` (factor=0.5, patience=1 or 2, min_lr=1e-6). Manual adjustments (e.g., to 1e-5) were made during later stages.
-* **Epochs:** Trained for approximately 35 epochs.
+* **Epochs:** Trained for approximately 25 epochs.
 * **Hardware:** Kaggle Notebook (GPU -P100).
 * **Callbacks:** `ModelCheckpoint` (saving best based on `val_loss`), `ReduceLROnPlateau`.
 
@@ -46,7 +46,7 @@
 * **Evaluation Data:** 10% of the dataset was reserved for vaildation.
 * **Metrics:**
   * CTC Loss (Validation): Reached a minimum value around **\~103**. While far from perfect it does demonstrate the model's ability to identify patterns.
-  * Word Error Rate (WER): **Not explicitly calculated** during training. Based on the validation loss and the augmented training strategy, WER on `dev-clean` might be slightly higher than if trained only on clean data (perhaps **18-30%** range estimate), but performance on noisy test sets (like `test-other` or custom noisy data) should be comparatively better. Requires explicit calculation.
+  * Word Error Rate (WER): **Not explicitly calculated** during training. Based on the validation loss and the augmented training strategy, WER on `dev-clean` might be slightly higher than if trained only on clean data, but performance on noisy test sets (like `test-other` or custom noisy data) should be comparatively better. During inference, based on the few audio files I transcribed during testing, I found an approximate **15-30%WER** on clean data and **20%+WER** on noisy data.
 
 ## Model Limitations
 
@@ -74,29 +74,4 @@
 
 ## How to Use
 
-*(Include code snippets based on your inference scripts)*
-
-**For Keras Model (`.keras`):**
-
-```python
-import tensorflow as tf
-import librosa
-# ... [Include CHARACTERS, num_to_char, power_to_db, preprocess_audio_tf, ctc_loss] ...
-
-# Load model
-model = tf.keras.models.load_model("asr_model_best.keras", custom_objects={"ctc_loss": ctc_loss})
-
-# Preprocess audio
-audio_file = "path/to/audio.wav"
-spectrogram = preprocess_audio_tf(tf.constant(audio_file))
-input_batch = tf.expand_dims(spectrogram, axis=0)
-
-# Predict
-predictions = model.predict(input_batch)
-logits = predictions[0]
-
-# Decode (Greedy Example)
-predicted_ids = tf.argmax(logits, axis=-1)
-# ... [Add greedy CTC decoding logic: unique -> remove blank -> num_to_char -> join] ...
-transcription = "..." 
-print(transcription)
+In run_infer.py, enter the path to the model file and also enter the path to your desired wav file to transcribe, and the code will print out the transcription using a basic greedy CTC decoder.
