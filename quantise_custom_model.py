@@ -3,7 +3,7 @@ import numpy as np
 import os
 
 # --- Configuration ---
-# 1. Path to your saved custom .keras model file
+# 1. saved custom .keras model file
 keras_model_path = "asr_model_best.keras" 
 
 # 2. Path where you want to save the quantized TFLite model
@@ -14,9 +14,9 @@ SAMPLE_RATE = 16000
 N_FFT = 400
 HOP_LENGTH = 160
 N_MELS = 80
-# Path to a small subset of your training audio files (e.g., 100-200 files)
+# Path to a small subset of training audio files (e.g., 100-200 files)
 # You need the actual audio files, not just the paths list from load_data
-REPRESENTATIVE_DATA_DIR = "/path/to/some/training/audio/files/" 
+REPRESENTATIVE_DATA_DIR = "/kaggle/input/ASRcalibrate/" 
 NUM_CALIBRATION_STEPS = 100 # Number of samples to use for calibration
 # ---
 
@@ -74,7 +74,7 @@ print("Preparing representative dataset for quantization calibration...")
 representative_audio_files = [
     os.path.join(REPRESENTATIVE_DATA_DIR, fname) 
     for fname in os.listdir(REPRESENTATIVE_DATA_DIR) 
-    if fname.lower().endswith(('.wav', '.flac')) # Adjust extensions if needed
+    if fname.lower().endswith(('.wav')) # Adjust extensions if needed
 ][:NUM_CALIBRATION_STEPS]
 
 if not representative_audio_files:
@@ -92,8 +92,6 @@ print("Starting TFLite conversion and quantization...")
 converter = tf.lite.TFLiteConverter.from_keras_model(model)
 converter.optimizations = [tf.lite.Optimize.DEFAULT]
 converter.representative_dataset = representative_dataset_gen
-# Ensure that if ops can't be quantized, the converter throws an error.
-# Use this for strict INT8 deployment. Remove if float fallback is acceptable.
 converter.target_spec.supported_ops = [tf.lite.OpsSet.TFLITE_BUILTINS_INT8]
 # Set input and output types to int8
 # Note: Check model input/output dtypes if conversion fails
@@ -108,6 +106,6 @@ print(f"Saving quantized TFLite model to {tflite_model_path}...")
 with open(tflite_model_path, 'wb') as f:
     f.write(tflite_quant_model)
 
-print(f"\n✅ Quantized model saved successfully to {tflite_model_path}")
+print(f"\nQuantized model saved successfully to {tflite_model_path}")
 print(f"Original model size: {os.path.getsize(keras_model_path) / (1024*1024):.2f} MB")
 print(f"Quantized model size: {os.path.getsize(tflite_model_path) / (1024*1024):.2f} MB")
