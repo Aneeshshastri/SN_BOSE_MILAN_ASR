@@ -77,21 +77,19 @@ def preprocess_audio_tf(file_path: tf.Tensor):
         return tf.cast(log_mel_spectrogram, dtype=tf.float32)
 
     except Exception as e:
-        # In inference, we might want to raise the error or return None
         tf.print("Error processing file:", file_path, "Exception:", e, summarize=-1)
-        # Return a shape compatible tensor filled with zeros or handle error differently
+        # Return a shape compatible tensor filled with zeros
         return tf.zeros((100, N_MELS, 1), dtype=tf.float32) 
 
 # --- Load Custom Keras Model ---
 print(f"Loading Keras model from {keras_model_path}...")
-# We need to provide the custom CTC loss function when loading
+#custom CTC loss function when loading
 def ctc_loss(y_true, y_pred):
-     # Include the exact ctc_loss function definition used during training here
-     # Make sure it uses count_nonzero(y_true, ...) correctly
+     # Includes the exact ctc_loss function definition used during training 
     batch_len = tf.cast(tf.shape(y_pred)[0], dtype="int64")
     input_length = tf.cast(tf.shape(y_pred)[1], dtype="int64")
     input_length = input_length * tf.ones(shape=(batch_len, 1), dtype="int64")
-    label_length = tf.math.count_nonzero(y_true, axis=1, keepdims=True, dtype="int64") # Corrected version
+    label_length = tf.math.count_nonzero(y_true, axis=1, keepdims=True, dtype="int64") 
     loss = tf.keras.backend.ctc_batch_cost( y_true, y_pred, input_length, label_length )
     return loss
 
@@ -114,7 +112,6 @@ print(f"Spectrogram shape: {spectrogram.shape}")
 print("\nRunning inference...")
 
 # Get model predictions (logits) using model.predict for clarity
-# Using predict is slightly simpler than defining a tf.function here
 predictions = model.predict(spectrogram)
 logits = predictions[0] # Remove the batch dimension
 
@@ -123,9 +120,7 @@ print("Decoding...")
 
 # Get the most likely token IDs at each time step
 predicted_ids = tf.argmax(logits, axis=-1)
-
-# Remove consecutive duplicates and blank token
-# A simple greedy decode might just remove duplicates:
+# A simple greedy decode:
 decoded_ids = []
 last_id = -1
 for token_id in predicted_ids.numpy():
