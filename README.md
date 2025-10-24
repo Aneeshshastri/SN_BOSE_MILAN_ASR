@@ -57,13 +57,14 @@ This project details the creation of a custom end-to-end Automatic Speech Recogn
     3.  Calibrate: `tf.lite.TFLiteConverter` observes activation ranges using the representative dataset.
     4.  Convert: Model weights/activations converted to `int8`, targeting `TFLITE_BUILTINS_INT8`.
     5.  Save: Quantized model saved as `.tflite` file.
-* **Inference:** Requires `tf.lite.Interpreter` API (`asr_inference_quantized.py`), handling potential int8 input/output scaling.
+* **Inference:** Requires `tf.lite.Interpreter` API added to (`run_infer.py`), handling potential int8 input/output scaling.
+* **NOTE** Since the model is already small anyway, it is recommended to run the original .keras model, and the run_infer.py reflects the same.
 
 ## 5. Installation & Usage
 
 1.  **Clone Repo:** `git clone https://github.com/Aneeshshastri/SN_BOSE_MILAN_ASR.git`
 2.  **Environment:** Set up a Python virtual environment.
-3.  **Install Deps:** `pip install -r requirements.txt` (Ensure `tensorflow`, `librosa`, `numpy`, `soundfile` are listed).
+3.  **Install Deps:** `pip install -r requirements.txt`.
 4.  **Prepare Data:**
     * Download LibriSpeech `train-clean-100` (and `test-clean`).
     * Run `Augmenter.ipynb` to augment the dataset.
@@ -77,13 +78,13 @@ This project details the creation of a custom end-to-end Automatic Speech Recogn
     * Configure paths in `quantize_custom_model.py` (especially `REPRESENTATIVE_DATA_DIR`).
     * Run `python quantize_custom_model.py`. Creates `.tflite` file.
 8.  **Inference (TFLite):**
-    * Configure paths in `asr_inference_quantized.py`.
-    * Run `python asr_inference_quantized.py`.
+    * Configure paths in `run_infer.py`.
+    * Run `python run_infer.py`.
 
 ## 6. Challenges & Learnings
 
 * **Data Pipeline Optimization:** Balancing performance (`tf.data`, parallel calls) with resource constraints (RAM usage due to large shuffle buffer, CPU bottleneck during on-the-fly augmentation/preprocessing). Addressed high RAM by significantly reducing shuffle buffer size.
-* **TensorFlow Debugging:** Resolved complex runtime errors involving shape mismatches, data type conflicts (`float32` vs `float64`), library version incompatibilities, and graph optimization issues (e.g., `LayoutOptimizer` errors with `SpatialDropout2D`/`Dropout`, resolved by layer replacement and careful shape handling).
+* **TensorFlow Debugging:** Resolved complex runtime errors involving shape mismatches, data type conflicts (`float32` vs `float64`), library version incompatibilities, and graph optimization issues (e.g., `LayoutOptimizer` errors with `SpatialDropout2D`/`Dropout`, resolved by layer replacement and careful shape handling, along with disabling experimental features).
 * **Model Training Dynamics:** Iterated on model architecture (increasing capacity to combat underfitting) and regularization techniques (`Dropout`, `BatchNormalization` to combat overfitting). Managed learning rate using `ReduceLROnPlateau`.
 * **CTC Implementation:** Ensured correct CTC loss calculation and data filtering based on sequence length requirements.
 * **Quantization Workflow:** Implemented post-training INT8 quantization, including calibration with a representative dataset and adapting inference code for the TFLite interpreter.
