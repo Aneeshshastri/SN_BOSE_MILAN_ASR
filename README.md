@@ -1,5 +1,5 @@
 # Custom End-to-End Speech Recognition For Milan25
-###By SN BOSE Team (Aneesh Shastri, Srijan)
+### By SN BOSE Team Name: (Aneesh Shastri, Srijan Maity) Roll No: (CO25BTECH11004,CO25BTECH11026)
 
 ## Project Overview
 
