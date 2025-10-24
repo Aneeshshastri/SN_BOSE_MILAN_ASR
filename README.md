@@ -1,6 +1,8 @@
 # Custom End-to-End Speech Recognition For Milan25
 ### By SN BOSE Team Name: (Aneesh Shastri, Srijan Maity) Roll No: (CO25BTECH11004,CO25BTECH11026)
-
+--
+Find the quantised and original models here:
+--
 ## Project Overview
 
 This project details the creation of a custom end-to-end Automatic Speech Recognition (ASR) system using TensorFlow and Keras. Starting with the clean LibriSpeech dataset, the system incorporates custom data augmentation, trains a bespoke Convolutional Recurrent Neural Network (CRNN) model with CTC loss, and finally quantizes the model for efficient CPU inference using TensorFlow Lite (TFLite). The entire process, including challenges faced and solutions implemented, is documented here.
