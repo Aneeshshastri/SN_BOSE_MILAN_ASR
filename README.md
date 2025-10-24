@@ -1,4 +1,5 @@
-# SN_BOSE_MILAN_ASR: Custom End-to-End Speech Recognition
+# Custom End-to-End Speech Recognition For Milan25
+###By SN BOSE Team (Aneesh Shastri, Srijan)
 
 ## Project Overview
 
