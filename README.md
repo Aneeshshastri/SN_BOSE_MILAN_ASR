@@ -1,5 +1,8 @@
-# SN_BOSE_MILAN_ASR: Custom End-to-End Speech Recognition
+# Custom End-to-End Speech Recognition For Milan25
+### By SN BOSE Team Name: (Aneesh Shastri, Srijan Maity) Roll No: (CO25BTECH11004,CO25BTECH11026)
 
+[Find the quantised and original models here]("https://drive.google.com/drive/folders/1hsBv1b20os3CCw71D3av-SSag_uaZiou?usp=sharing")
+--
 ## Project Overview
 
 This project details the creation of a custom end-to-end Automatic Speech Recognition (ASR) system using TensorFlow and Keras. Starting with the clean LibriSpeech dataset, the system incorporates custom data augmentation, trains a bespoke Convolutional Recurrent Neural Network (CRNN) model with CTC loss, and finally quantizes the model for efficient CPU inference using TensorFlow Lite (TFLite). The entire process, including challenges faced and solutions implemented, is documented here.
@@ -13,8 +16,7 @@ This project details the creation of a custom end-to-end Automatic Speech Recogn
 * [5. Installation & Usage](#5-installation--usage)
 * [6. Challenges & Learnings](#6-challenges--learnings)
 * [7. Results & Future Work](#7-results--future-work)
-* [8. License](#8-license)
-
+* 
 ## 1. Dataset & Custom Augmentation
 
 * **Dataset:** LibriSpeech `train-clean-100` (~100 hours). Original `.flac` files were converted to `.wav` for broader compatibility within the processing pipeline (as seen in `model-trainer.ipynb`)
@@ -98,6 +100,3 @@ This project details the creation of a custom end-to-end Automatic Speech Recogn
     * Although fine-tuning would give significantly better results, I faced a lot of issues fine-tuning models, and eventually gave up.
     * Fully pre-process the dataset into TFRecords to maximize training speed and reduce RAM/CPU load during training.
 
-## 8. License
-
-This project is licensed under the MIT License - see the `LICENSE` file for details.
