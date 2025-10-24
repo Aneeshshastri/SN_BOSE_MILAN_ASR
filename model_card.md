@@ -21,7 +21,7 @@
 
 ## Training Data
 
-* **Dataset:** As given during the competition (\~100 hours). [Link](https://www.openslr.org/12)
+* **Dataset:** As given during the competition (\~100 hours). [Link](https://drive.google.com/drive/folders/1uJC-VvEDiB5nm8-q04-fKrl3SO67ZEnf)
 * **Speakers:** \~250 speakers reading English literature.
 * **Preprocessing:** Original audio converted from FLAC to WAV, resampled to 16kHz. Log-Mel spectrograms (80 bins) generated using `tf.signal`.
 * **Augmentation Strategy:** Trained **primarily on augmented data**. The custom `Augmenter` class was applied probabilistically to **all raw audio waveforms during training** to simulate noisy conditions:
@@ -43,9 +43,9 @@
 
 ## Evaluation
 
-* **Evaluation Data:** 10% of the dataset was reserved for vaildation(implicitly used as the validation set via the 90/10 split in the training script). 
+* **Evaluation Data:** 10% of the dataset was reserved for vaildation.
 * **Metrics:**
-  * CTC Loss (Validation): Reached a minimum value around **\~104**. This value reflects performance on *clean* validation data, while the model was trained on *noisy* data, indicating some generalization capability.
+  * CTC Loss (Validation): Reached a minimum value around **\~103**. While far from perfect it does demonstrate the model's ability to identify patterns.
   * Word Error Rate (WER): **Not explicitly calculated** during training. Based on the validation loss and the augmented training strategy, WER on `dev-clean` might be slightly higher than if trained only on clean data (perhaps **18-30%** range estimate), but performance on noisy test sets (like `test-other` or custom noisy data) should be comparatively better. Requires explicit calculation.
 
 ## Model Limitations
