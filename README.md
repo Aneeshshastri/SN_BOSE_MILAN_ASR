@@ -64,7 +64,7 @@ This project details the creation of a custom end-to-end Automatic Speech Recogn
 
 1.  **Clone Repo:** `git clone https://github.com/Aneeshshastri/SN_BOSE_MILAN_ASR.git`
 2.  **Environment:** Set up a Python virtual environment.
-3.  **Install Deps:** `pip install -r requirements.txt` (Ensure `tensorflow`, `librosa`, `numpy`, `soundfile` are listed).
+3.  **Install Deps:** `pip install -r requirements.txt`.
 4.  **Prepare Data:**
     * Download LibriSpeech `train-clean-100` (and `test-clean`).
     * Run `Augmenter.ipynb` to augment the dataset.
