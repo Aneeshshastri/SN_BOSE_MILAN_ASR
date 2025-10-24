@@ -88,7 +88,7 @@ This project details the creation of a custom end-to-end Automatic Speech Recogn
 
 ## 7. Results & Future Work
 
-* **Results:** *[./model_card.md]*
+* **Results:** *[Model Card](./model_card.md)*
 * **Future Work:**
     * Implement a proper CTC beam search decoder (e.g., using `pyctcdecode` or TensorFlow's built-ins) for potentially significant WER improvement over greedy decoding.
     * Due to limitations in my computational resources, I was unable to integrate my acoustic model with a language model, additionally, since it was supposed to focus on CPU only inference speed, I believe it was the right choice to implement only a simply greedy decoder.
